@@ -1,44 +1,19 @@
-def flag = true   // you can change this dynamically later
+flag=true
 
 pipeline {
     agent any
-
+    environment {
+        //variables defined here can be used by any stage
+        NEW_VERSION = '1.3.0'
+    }
     stages {
-        stage('Build') {
+        stage('build') {
             steps {
                 echo 'Building Project'
+                //using environment variable
+                //To output the value of variable in string use " "
+                echo "Building version ${NEW_VERSION}"
             }
-        }
-
-        stage('Test') {
-            when {
-                expression {
-                    flag == false     // ❗ only runs Test stage if flag is false
-                }
-            }
-            steps {
-                echo 'Testing Project'
-            }
-        }
-
-        stage('Deploy') {
-            when {
-                expression {
-                    flag == true      // ❗ only runs Deploy stage if flag is true
-                }
-            }
-            steps {
-                echo 'Deploying Project'
-            }
-        }
-    }
-
-    post {
-        always {
-            echo 'Post build condition running'
-        }
-        failure {
-            echo 'Post Action if build Failed'
         }
     }
 }
